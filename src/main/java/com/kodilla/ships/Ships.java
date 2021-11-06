@@ -22,15 +22,14 @@ import java.util.Objects;
 import static javafx.scene.paint.Color.*;
 
 public class Ships extends Application {
+    private Player computer = new Player();
+    private Player player = new Player();
     public static void main(String[] args) {
         launch(args);
     }
 
-    Player computer = new Player();
-    Player player = new Player();
     @Override
     public void start(Stage primaryStage) throws Exception {
-
 
         GridPane grid1 = new GridPane();
         int numRows = 11;
@@ -58,7 +57,7 @@ public class Ships extends Application {
         grid1.add(createButton("H"), 8, 0);
         grid1.add(createButton("I"), 9, 0);
         grid1.add(createButton("J"), 10, 0);
-
+//tablice z literami i liczbami i petla for
         grid1.add(createButton("1"), 0, 1);
         grid1.add(createButton("2"), 0, 2);
         grid1.add(createButton("3"), 0, 3);
@@ -129,9 +128,9 @@ public class Ships extends Application {
 
 
 
-
         grid1.setAlignment(Pos.BASELINE_LEFT);
         grid2.setAlignment(Pos.BASELINE_RIGHT);
+
 
         Rectangle r = new Rectangle();
         r.setHeight(400);
@@ -159,15 +158,12 @@ public class Ships extends Application {
         Button button = new Button(text);
         button.setPrefHeight(100);
         button.setPrefWidth(100);
-        button.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
-            @Override
-            public void handle(javafx.scene.input.MouseEvent event) {
-                if(event.getButton().equals(MouseButton.PRIMARY)){
-                    if(event.getClickCount() == 2){
-                        button.setText("");
-                    }if(event.getClickCount()==1){
-                        button.setText("x");
-                    }
+        button.setOnMouseClicked(event -> {
+            if(event.getButton().equals(MouseButton.PRIMARY)){
+                if(event.getClickCount() == 2){
+                    button.setText("");
+                }if(event.getClickCount()==1){
+                    button.setText("x");
                 }
             }
         });

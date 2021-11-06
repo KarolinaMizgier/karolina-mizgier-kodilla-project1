@@ -3,16 +3,16 @@ package com.kodilla.ships;
 import javafx.scene.control.Button;
 
 public class Player {
-    int score;
+    private int score;
 
     public int getScore() {
         return score;
     }
 
     public int shoot(Button button){
-        if(button.getUserData()=="x"){
+        if("x".equals(button.getUserData())){
             button.setText("x");
-           return score+=1;
+           return score++;
         }else{
             button.setText("*");
             return score;

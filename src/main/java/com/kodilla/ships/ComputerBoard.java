@@ -3,58 +3,71 @@ package com.kodilla.ships;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ComputerBoard {
 
-    public int randomInt(int min, int max) {
+    public InputStream getBoard() {
         Random random = new Random();
-        return random.nextInt(max - min) + min;
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is;
+        int number = random.nextInt(5);
+        switch (number) {
+            case 1:
+                return classloader.getResourceAsStream("board1.txt");
+            case 2:
+                return classloader.getResourceAsStream("board2.txt");
+            case 3:
+                return classloader.getResourceAsStream("board3.txt");
+            case 4:
+                return classloader.getResourceAsStream("board4.txt");
+            case 5:
+                return classloader.getResourceAsStream("board5.txt");
+        }
+        return null;
     }
 
-    public List<Integer> nextRandom(List<Node> excluded) {
-        int x = randomInt(1, 10);
-        int y = randomInt(1, 10);
-        List<Integer> l = new ArrayList<>();
-        for (Node node : excluded) {
-            int n= GridPane.getRowIndex(node);
-            int m = GridPane.getColumnIndex(node);
-            if ((n == x) || (m == y) || (n == (x + 1)) || (n == (x - 1)) || (n == (x - 2)) || (n == (x + 2)) || (m == (y + 1)) || (m == (y - 1)) || (m == (y - 2)) || (m == (y + 2))) {
-                nextRandom(excluded);
-            } else {
-                l.add(x);
-                l.add(y);
-            }
-        }
-        return l;
-    }
 
     public GridPane setBoard(GridPane grid2) {
-        ButtonExtractor buttonEx = new ButtonExtractor();
-        List<Node> excluded = new ArrayList<>();
-        int temp = randomInt(1,10);
-        int temp2 = randomInt(1,10);
-        Node n1 = buttonEx.getNodeByRowCol(grid2, temp, temp2);
-        Node n2 = buttonEx.getNodeByRowCol(grid2, temp + 1, temp2);
-        n1.setUserData("x");
-        n2.setUserData("x");
-        excluded.add(n1);
-        excluded.add(n2);
+        ButtonExtractor buttonExtractor = new ButtonExtractor();
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        Random random = new Random();
+        InputStream is = getBoard();
+        String result = new BufferedReader(new InputStreamReader(is))
+                .lines().collect(Collectors.joining("\n"));
+        System.out.println(result);
+        char[] chars = result.toCharArray();
 
-        List<Integer> temps = nextRandom(excluded);
-        int temp3 = temps.get(0);
-        int temp4 = temps.get(1);
-        Node n3 = buttonEx.getNodeByRowCol(grid2, temp3, temp4);
-        Node n4 = buttonEx.getNodeByRowCol(grid2, temp3 + 1, temp4);
-        n3.setUserData("x");
-        n4.setUserData("x");
-        excluded.add(n3);
-        excluded.add(n4);
+        System.out.println("Begin");
+        for (int i = 0; i < chars.length; i++) {
+            System.out.print(chars[i]);
+        }
+        System.out.println("End");
 
+        char[][] tab = new char[11][11];
+        for (int i = 0, n = 0, m = 0; i < chars.length; i++) {
+            char temp = chars[i];
+            if (temp != '\n') {
+                tab[n][m] = temp;
+                n++;
+            } else {
+                n = 0;
+                m++;
+            }
+        }
 
-
+        for (int n = 1; n < 11; n++) {
+            for (int m = 1; m < 11; m++) {
+                char temp = tab[n][m];
+                if (temp == 'x') {
+                    buttonExtractor.getNodeByRowCol(grid2, n, m).setUserData("x");
+                } else {
+                    buttonExtractor.getNodeByRowCol(grid2, n, m).setUserData("*");
+                }
+            }
+        }
 
         return grid2;
     }
