@@ -1,29 +1,33 @@
 package com.kodilla.ships;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-import java.awt.event.MouseEvent;
-import java.util.Objects;
 
 import static javafx.scene.paint.Color.*;
 
 public class Ships extends Application {
     private Player computer = new Player();
     private Player player = new Player();
+    private GridPane grid2 = new GridPane();
+    private GridPane grid1 = new GridPane();
+    private GridPane mainGrid = new GridPane();
+    private ButtonExtractor extractor = new ButtonExtractor();
+    private boolean playersTurn = true;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -31,7 +35,7 @@ public class Ships extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        GridPane grid1 = new GridPane();
+        // CREATING GRID 1
         int numRows = 11;
         int numColumns = 11;
         for (int row = 0; row < numRows; row++) {
@@ -46,37 +50,31 @@ public class Ships extends Application {
             cc.setHgrow(Priority.ALWAYS);
             grid1.getColumnConstraints().add(cc);
         }
+        // ASSIGNING LETTERS AND NUMBERS TO LABELS
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        for (int i = 0; i < 10; i++) {
+            Button button = new Button(letters[i]);
+            button.setPrefHeight(100);
+            button.setPrefWidth(100);
+            button.setDisable(true);
+            grid1.add(button, i + 1, 0);
+        }
+        for (int i = 0; i < 10; i++) {
+            Button button = new Button(String.valueOf(i + 1));
+            button.setPrefHeight(100);
+            button.setPrefWidth(100);
+            button.setDisable(true);
+            grid1.add(button, 0, i + 1);
+        }
 
-        grid1.add(createButton("A"), 1, 0);
-        grid1.add(createButton("B"), 2, 0);
-        grid1.add(createButton("C"), 3, 0);
-        grid1.add(createButton("D"), 4, 0);
-        grid1.add(createButton("E"), 5, 0);
-        grid1.add(createButton("F"), 6, 0);
-        grid1.add(createButton("G"), 7, 0);
-        grid1.add(createButton("H"), 8, 0);
-        grid1.add(createButton("I"), 9, 0);
-        grid1.add(createButton("J"), 10, 0);
-//tablice z literami i liczbami i petla for
-        grid1.add(createButton("1"), 0, 1);
-        grid1.add(createButton("2"), 0, 2);
-        grid1.add(createButton("3"), 0, 3);
-        grid1.add(createButton("4"), 0, 4);
-        grid1.add(createButton("5"), 0, 5);
-        grid1.add(createButton("6"), 0, 6);
-        grid1.add(createButton("7"), 0, 7);
-        grid1.add(createButton("8"), 0, 8);
-        grid1.add(createButton("9"), 0, 9);
-        grid1.add(createButton("10"), 0, 10);
-
+        // FILLING GRID1 WITH BUTTONS
         for (int i = 1; i < 11; i++) {
             for (int n = 1; n < 11; n++) {
                 Button button = createButton("");
                 grid1.add(button, i, n);
             }
         }
-
-        GridPane grid2 = new GridPane();
+        // CREATING GRID2
         for (int row = 0; row < numRows; row++) {
             RowConstraints rc = new RowConstraints();
             rc.setFillHeight(true);
@@ -89,61 +87,70 @@ public class Ships extends Application {
             cc.setHgrow(Priority.ALWAYS);
             grid2.getColumnConstraints().add(cc);
         }
-        grid2.add(createButton("A"), 1, 0);
-        grid2.add(createButton("B"), 2, 0);
-        grid2.add(createButton("C"), 3, 0);
-        grid2.add(createButton("D"), 4, 0);
-        grid2.add(createButton("E"), 5, 0);
-        grid2.add(createButton("F"), 6, 0);
-        grid2.add(createButton("G"), 7, 0);
-        grid2.add(createButton("H"), 8, 0);
-        grid2.add(createButton("I"), 9, 0);
-        grid2.add(createButton("J"), 10, 0);
+        // ASSIGNING LETTERS AND NUMBERS TO LABELS
+        for (int i = 0; i < 10; i++) {
+            Button button = new Button(letters[i]);
+            button.setPrefHeight(100);
+            button.setPrefWidth(100);
+            button.setDisable(true);
+            grid2.add(button, i + 1, 0);
+        }
 
-        Button button_1 = createButton("1");
-        button_1.setDisable(true);
-        grid2.add(button_1, 0, 1);
-        grid2.add(createButton("2"), 0, 2);
-        grid2.add(createButton("3"), 0, 3);
-        grid2.add(createButton("4"), 0, 4);
-        grid2.add(createButton("5"), 0, 5);
-        grid2.add(createButton("6"), 0, 6);
-        grid2.add(createButton("7"), 0, 7);
-        grid2.add(createButton("8"), 0, 8);
-        grid2.add(createButton("9"), 0, 9);
-        grid2.add(createButton("10"), 0, 10);
+        for (int i = 0; i < 10; i++) {
+            Button button = new Button(String.valueOf(i + 1));
+            button.setPrefHeight(100);
+            button.setPrefWidth(100);
+            button.setDisable(true);
+            grid2.add(button, 0, i + 1);
+        }
 
-
-            for (int i = 1; i < 11; i++) {
-                for (int n = 1; n < 11; n++) {
-                    Button button = createButton2();
-                    grid2.add(button, i, n);
-                }
+        // FILLING GRID2 WITH BUTTONS
+        for (int i = 1; i < 11; i++) {
+            for (int n = 1; n < 11; n++) {
+                Button button = createButton2();
+                grid2.add(button, i, n);
             }
+        }
 
-            ComputerBoard board = new ComputerBoard();
-            board.setBoard(grid2);
-
-
-
-
-
+        // SETTING THE SHIPS BOARD FOR COMPUTER
+        ComputerBoard board = new ComputerBoard();
+        board.setBoard(grid2);
+        // PLACING GRIDS ON SCENE
         grid1.setAlignment(Pos.BASELINE_LEFT);
         grid2.setAlignment(Pos.BASELINE_RIGHT);
 
+        // CREATING RECTANGLE TO SEPARATE GRIDS
+        Rectangle middleOfTheWindow = new Rectangle();
+        middleOfTheWindow.setHeight(550);
+        middleOfTheWindow.setWidth(100);
+        middleOfTheWindow.setFill(GRAY);
+        // CREATING LABELS FOR GAME BOARDS
+        TextField playerLabel = new TextField("YOUR BOARD");
+        playerLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
+        playerLabel.setDisable(true);
 
-        Rectangle r = new Rectangle();
-        r.setHeight(400);
-        r.setWidth(100);
-        r.setFill(GRAY);
+        TextField commputerLabel = new TextField("YOUR OPPONENT'S BOARD");
+        commputerLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
+        commputerLabel.setDisable(true);
+        // CREATING TEXT BOXES WITH GAME INSTRUCTIONS
+        TextField gameInfo = new TextField("Mark your ships on your board by clicking on selected fields.");
+        gameInfo.setFont(Font.font("Helvetica", FontWeight.BOLD, 14));
+        gameInfo.setDisable(true);
 
+        TextField gameInfo2 = new TextField("You start the game by shooting on your opponent's board.");
+        gameInfo2.setFont(Font.font("Helvetica", FontWeight.BOLD, 14));
+        gameInfo2.setDisable(true);
 
-        GridPane mainGrid = new GridPane();
-        mainGrid.add(grid1,0,0);
-        mainGrid.add(r,2,0);
-        mainGrid.add(grid2,3,0);
-
-        Scene scene = new Scene(mainGrid,900, 400, BLACK);
+        // ARRANGING ELEMENTS ON MAIN GRID
+        mainGrid.add(grid1, 0, 1);
+        mainGrid.add(middleOfTheWindow, 1, 1);
+        mainGrid.add(grid2, 2, 1);
+        mainGrid.add(playerLabel, 0, 0);
+        mainGrid.add(commputerLabel, 2, 0);
+        mainGrid.add(gameInfo, 0, 2);
+        mainGrid.add(gameInfo2, 2, 2);
+        // SHOWING MAIN GRID
+        Scene scene = new Scene(mainGrid, 1000, 620, BLACK);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -152,35 +159,71 @@ public class Ships extends Application {
         primaryStage.setTitle("Statki");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
+    // METHOD THAT CREATES BUTTONS ON COMPUTER BOARD
     private Button createButton(String text) {
         Button button = new Button(text);
         button.setPrefHeight(100);
         button.setPrefWidth(100);
         button.setOnMouseClicked(event -> {
-            if(event.getButton().equals(MouseButton.PRIMARY)){
-                if(event.getClickCount() == 2){
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                if (event.getClickCount() == 2) {   //DOUBLE CLICK DELETES ASSIGNED SHIP
                     button.setText("");
-                }if(event.getClickCount()==1){
+                    button.setUserData("");
+                }
+                if (event.getClickCount() == 1) {   // ONE CLICK ASSIGNS SHIP
                     button.setText("x");
+                    button.setUserData("x");
                 }
             }
         });
-         System.out.println(player.getScore());
+
+        System.out.println(player.getScore());
         return button;
     }
 
+    // METHOD THAT CREATES BUTTONS ON PLAYER'S BOARD
     public Button createButton2() {
         Button button = new Button();
         button.setPrefHeight(100);
         button.setPrefWidth(100);
         button.setOnAction(e -> {
-            //TODO shoot
-            computer.shoot(button);
+            boolean playersTurn = player.shoot(button);
+            if (!playersTurn) {
+                while (computer.computerShoot(grid1)) {     //PLAYER'S TURNS
+                    ;
+                }
+            } else {
+                ;
+            }
+
+            int scoreComp = computer.getScore();        //READing SCORE
+            int scorePlayer = player.getScore();
+
+            // ALERT TEXT POPUP WINDOWS WHEN SOMEONE WINS THE GAME
+            if (scoreComp == 20) {
+                System.out.println(scoreComp);
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("End of game");
+                alert.setHeaderText("YOU LOST");
+                alert.setContentText("Sorry!");
+                alert.showAndWait();
+            } else if (scorePlayer == 20) {
+                System.out.println(scorePlayer);
+                Alert alert2 = new Alert(Alert.AlertType.WARNING);
+                alert2.setTitle("End of game");
+                alert2.setHeaderText("YOU WON");
+                alert2.setContentText("Congratulations!");
+                alert2.showAndWait();
+            } else {
+                System.out.println(scoreComp);
+                System.out.println(scorePlayer);
+            }
         });
 
-        System.out.println(computer.getScore());
+        System.out.println(player.getScore());
         return button;
     }
 

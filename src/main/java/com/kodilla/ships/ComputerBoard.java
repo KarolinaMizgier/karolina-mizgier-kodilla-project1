@@ -32,19 +32,11 @@ public class ComputerBoard {
 
     public GridPane setBoard(GridPane grid2) {
         ButtonExtractor buttonExtractor = new ButtonExtractor();
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        Random random = new Random();
         InputStream is = getBoard();
         String result = new BufferedReader(new InputStreamReader(is))
                 .lines().collect(Collectors.joining("\n"));
         System.out.println(result);
         char[] chars = result.toCharArray();
-
-        System.out.println("Begin");
-        for (int i = 0; i < chars.length; i++) {
-            System.out.print(chars[i]);
-        }
-        System.out.println("End");
 
         char[][] tab = new char[11][11];
         for (int i = 0, n = 0, m = 0; i < chars.length; i++) {
