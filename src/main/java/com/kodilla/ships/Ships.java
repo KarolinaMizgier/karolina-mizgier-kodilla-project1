@@ -17,6 +17,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.util.concurrent.TimeUnit;
+
 import static javafx.scene.paint.Color.*;
 
 public class Ships extends Application {
@@ -125,7 +127,7 @@ public class Ships extends Application {
         middleOfTheWindow.setWidth(100);
         middleOfTheWindow.setFill(GRAY);
         // CREATING LABELS FOR GAME BOARDS
-        TextField playerLabel = new TextField("YOUR BOARD");
+        TextField playerLabel = new TextField("YOUR BOARD"); //Stringi (wszystkie teksty) jak pola prywatne statyczne finalne
         playerLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
         playerLabel.setDisable(true);
 
@@ -190,13 +192,10 @@ public class Ships extends Application {
         button.setPrefHeight(100);
         button.setPrefWidth(100);
         button.setOnAction(e -> {
-            boolean playersTurn = player.shoot(button);
+            boolean playersTurn = player.shoot(button,grid2);
             if (!playersTurn) {
-                while (computer.computerShoot(grid1)) {     //PLAYER'S TURNS
-                    ;
+                while (computer.computerShoot(grid1)) {
                 }
-            } else {
-                ;
             }
 
             int scoreComp = computer.getScore();        //READing SCORE
@@ -222,9 +221,9 @@ public class Ships extends Application {
                 System.out.println(scorePlayer);
             }
         });
-
         System.out.println(player.getScore());
         return button;
     }
 
 }
+//TODO generator tablicy statkow
