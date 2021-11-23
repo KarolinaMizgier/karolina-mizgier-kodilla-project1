@@ -11,15 +11,13 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-import java.util.concurrent.TimeUnit;
-
-import static javafx.scene.paint.Color.*;
+import static javafx.scene.paint.Color.BLACK;
+import static javafx.scene.paint.Color.GRAY;
 
 public class Ships extends Application {
     private Player computer = new Player();
@@ -29,6 +27,10 @@ public class Ships extends Application {
     private GridPane mainGrid = new GridPane();
     private ButtonExtractor extractor = new ButtonExtractor();
     private boolean playersTurn = true;
+    private static final String yourBoard = "YOUR BOARD";
+    private static final String opponentBoard = "YOUR OPPONENT'S BOARD";
+    private static final String instructions1 = "Mark your ships on your board by clicking on selected fields.";
+    private static final String instructions2 = "You start the game by shooting on your opponent's board.";
 
     public static void main(String[] args) {
         launch(args);
@@ -37,7 +39,6 @@ public class Ships extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // CREATING GRID 1
         int numRows = 11;
         int numColumns = 11;
         for (int row = 0; row < numRows; row++) {
@@ -52,7 +53,7 @@ public class Ships extends Application {
             cc.setHgrow(Priority.ALWAYS);
             grid1.getColumnConstraints().add(cc);
         }
-        // ASSIGNING LETTERS AND NUMBERS TO LABELS
+
         String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
         for (int i = 0; i < 10; i++) {
             Button button = new Button(letters[i]);
@@ -69,14 +70,14 @@ public class Ships extends Application {
             grid1.add(button, 0, i + 1);
         }
 
-        // FILLING GRID1 WITH BUTTONS
+
         for (int i = 1; i < 11; i++) {
             for (int n = 1; n < 11; n++) {
                 Button button = createButton("");
                 grid1.add(button, i, n);
             }
         }
-        // CREATING GRID2
+
         for (int row = 0; row < numRows; row++) {
             RowConstraints rc = new RowConstraints();
             rc.setFillHeight(true);
@@ -89,7 +90,7 @@ public class Ships extends Application {
             cc.setHgrow(Priority.ALWAYS);
             grid2.getColumnConstraints().add(cc);
         }
-        // ASSIGNING LETTERS AND NUMBERS TO LABELS
+
         for (int i = 0; i < 10; i++) {
             Button button = new Button(letters[i]);
             button.setPrefHeight(100);
@@ -106,7 +107,6 @@ public class Ships extends Application {
             grid2.add(button, 0, i + 1);
         }
 
-        // FILLING GRID2 WITH BUTTONS
         for (int i = 1; i < 11; i++) {
             for (int n = 1; n < 11; n++) {
                 Button button = createButton2();
@@ -114,10 +114,10 @@ public class Ships extends Application {
             }
         }
 
-        // SETTING THE SHIPS BOARD FOR COMPUTER
+
         ComputerBoard board = new ComputerBoard();
         board.setBoard(grid2);
-        // PLACING GRIDS ON SCENE
+
         grid1.setAlignment(Pos.BASELINE_LEFT);
         grid2.setAlignment(Pos.BASELINE_RIGHT);
 
@@ -127,23 +127,23 @@ public class Ships extends Application {
         middleOfTheWindow.setWidth(100);
         middleOfTheWindow.setFill(GRAY);
         // CREATING LABELS FOR GAME BOARDS
-        TextField playerLabel = new TextField("YOUR BOARD"); //Stringi (wszystkie teksty) jak pola prywatne statyczne finalne
+        TextField playerLabel = new TextField(yourBoard);
         playerLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
         playerLabel.setDisable(true);
 
-        TextField commputerLabel = new TextField("YOUR OPPONENT'S BOARD");
+        TextField commputerLabel = new TextField(opponentBoard);
         commputerLabel.setFont(Font.font("Helvetica", FontWeight.BOLD, 20));
         commputerLabel.setDisable(true);
         // CREATING TEXT BOXES WITH GAME INSTRUCTIONS
-        TextField gameInfo = new TextField("Mark your ships on your board by clicking on selected fields.");
+        TextField gameInfo = new TextField(instructions1);
         gameInfo.setFont(Font.font("Helvetica", FontWeight.BOLD, 14));
         gameInfo.setDisable(true);
 
-        TextField gameInfo2 = new TextField("You start the game by shooting on your opponent's board.");
+        TextField gameInfo2 = new TextField(instructions2);
         gameInfo2.setFont(Font.font("Helvetica", FontWeight.BOLD, 14));
         gameInfo2.setDisable(true);
 
-        // ARRANGING ELEMENTS ON MAIN GRID
+
         mainGrid.add(grid1, 0, 1);
         mainGrid.add(middleOfTheWindow, 1, 1);
         mainGrid.add(grid2, 2, 1);
@@ -151,7 +151,7 @@ public class Ships extends Application {
         mainGrid.add(commputerLabel, 2, 0);
         mainGrid.add(gameInfo, 0, 2);
         mainGrid.add(gameInfo2, 2, 2);
-        // SHOWING MAIN GRID
+
         Scene scene = new Scene(mainGrid, 1000, 620, BLACK);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
@@ -192,16 +192,14 @@ public class Ships extends Application {
         button.setPrefHeight(100);
         button.setPrefWidth(100);
         button.setOnAction(e -> {
-            boolean playersTurn = player.shoot(button,grid2);
+            boolean playersTurn = player.shoot(button, grid2);
             if (!playersTurn) {
                 while (computer.computerShoot(grid1)) {
                 }
             }
 
-            int scoreComp = computer.getScore();        //READing SCORE
+            int scoreComp = computer.getScore();
             int scorePlayer = player.getScore();
-
-            // ALERT TEXT POPUP WINDOWS WHEN SOMEONE WINS THE GAME
             if (scoreComp == 20) {
                 System.out.println(scoreComp);
                 Alert alert = new Alert(Alert.AlertType.WARNING);
